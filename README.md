@@ -7,6 +7,10 @@
 
 ## [Mihil_NamedGameVariables.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_NamedGameVariables.js)
 スクリプトや制御文字からゲーム内変数を名前で呼べるようになります。
+
+## [Mihil_Window_EventSkill.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_Window_EventSkill.js)
+スキル選択肢を表示できます。「アイテム選択の処理」のようにスキルのIDを選択できます。
+
 <!--
 ## [Columns_Plural.js](https://github.com/asakayu/Mihil_RPGMakerMV_plugins/blob/master/Columns_Plural.js)
 選択肢の列(横の並び)を2列以上にできます。  
