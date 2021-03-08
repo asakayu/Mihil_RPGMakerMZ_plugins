@@ -41,18 +41,15 @@
  *
  * @help 
  * 
- * プラグインコマンドで変数とアクターを選択するか、
- * スクリプトで
- * $gameMessage.setSkillChoice(variableID, actorId)
- * 指定したアクターの所持するスキルが一覧で表示され、
- * 選択するとvariableIDの変数に代入されます。
- * 
- * プラグインコマンドは
+ * プラグインコマンドで
+ * アクターのIDと代入する変数のIDを指定します。
  * setSkillIdは選択したスキルのIDを
  * setSkillItemは選択したスキルのデータベースオブジェクトを
  * それぞれ返します。
  * 
  * versions
+ * 1.3.1  PluginManagerEx.registerCommandの書き方を修正(@Sigureyaさんアドバイスありがとうございました)
+ * 1.3.0  スキル選択の処理を待つ処理ができていなかった。スクリプト直接呼び出しだと待てないのでスクリプト方式を廃止。
  * 1.2.0  Idを返すsetSkillIdとオブジェクトを返すsetSkillItemとにプラグインコマンドを分離
  *        プラグイン名を変更
  * 1.1.0  プラグインコマンドを追加
@@ -64,13 +61,11 @@
     'use strict'
 
 const currentScript = document.currentScript;
-PluginManagerEx.registerCommand(currentScript, "setSkillId", args => {
-    console.log({args:args})
-    $gameMessage.setSkillChoice(args.variable,  args.actor)
+PluginManagerEx.registerCommand(currentScript, "setSkillId", function(args) {
+    this.setSkillChoice([args.variable,  args.actor])
 });
-PluginManagerEx.registerCommand(currentScript, "setSkillItem", args => {
-    console.log({args:args})
-    $gameMessage.setSkillChoice(args.variable,  args.actor, true)
+PluginManagerEx.registerCommand(currentScript, "setSkillItem", function(args) {
+    this.setSkillChoice([args.variable,  args.actor, true])
 });
 
 
@@ -83,7 +78,6 @@ class Window_EventSkill extends Window_EventItem{
     makeItemList () {
         const actorId = $gameMessage.skillChoiceActorId();
         this._data = $gameActors.actor(actorId).skills()
-        // console.log(this._data)
     };
     needsNumber(){
         return false
@@ -117,7 +111,7 @@ Scene_Message.prototype.createEventSkillWindow = function() {
     const rect = this.eventItemWindowRect();
     this._eventSkillWindow = new Window_EventSkill(rect);
     this.addWindow(this._eventSkillWindow);
-    console.log(this.children)
+    // console.log(this.children)
 };
 const _Scene_Message_associateWindows = Scene_Message.prototype.associateWindows
 Scene_Message.prototype.associateWindows = function() {
@@ -126,6 +120,7 @@ Scene_Message.prototype.associateWindows = function() {
     messageWindow.setEventSkillWindow(this._eventSkillWindow);
     this._eventSkillWindow.setMessageWindow(messageWindow);
 }
+
 Window_Message.prototype.setEventSkillWindow = function(eventSkillWindow) {
     this._eventSkillWindow = eventSkillWindow;
 };
@@ -168,10 +163,23 @@ Game_Message.prototype.skillChoiceReturnItem = function() {
 Game_Message.prototype.skillChoiceActorId = function() {
     return this._skillChoiceActorId;
 };
+/**
+ * @param {boolean} isItem skill実態そのものを返すかどうか。falseでスキルIDを返す
+ */
 Game_Message.prototype.setSkillChoice = function(variableId, actorId=1, isItem=null) {
     this._skillChoiceVariableId = variableId;
     this._skillChoiceActorId = actorId;
     this._skillChoiceReturnItem = isItem;
+};
+
+// Select Skill
+Game_Interpreter.prototype.setSkillChoice = function(params) {
+    if ($gameMessage.isBusy()) {
+        return false;
+    }
+    $gameMessage.setSkillChoice(...params);
+    this.setWaitMode("message");
+    return true;
 };
 
 // MessageWindowHidden.js対応 https://github.com/triacontane/RPGMakerMV/blob/mz_master/MessageWindowHidden.js
