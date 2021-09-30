@@ -9,7 +9,7 @@
 スクリプトや制御文字からゲーム内変数を名前で呼べるようになります。
 
 ## [Mihil_RandomEvent.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_RandomEvent.js)
-選択肢の中のイベントをランダムに選んで実行します。
+選択肢の中のイベントをランダムに選んで実行します。  
 ランダムに情報を喋るNPCなどにどうぞ。
 
 ## [Mihil_Window_EventSkill.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_Window_EventSkill.js)
