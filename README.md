@@ -8,6 +8,10 @@
 ## [Mihil_NamedGameVariables.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_NamedGameVariables.js)
 スクリプトや制御文字からゲーム内変数を名前で呼べるようになります。
 
+## [Mihil_RandomEvent.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_RandomEvent.js)
+選択肢の中のイベントをランダムに選んで実行します。
+ランダムに情報を喋るNPCなどにどうぞ。
+
 ## [Mihil_Window_EventSkill.js](https://github.com/asakayu/Mihil_RPGMakerMZ_plugins/blob/master/Mihil_Window_EventSkill.js)
 スキル選択肢を表示できます。「アイテム選択の処理」のようにスキルのIDを選択できます。
 
