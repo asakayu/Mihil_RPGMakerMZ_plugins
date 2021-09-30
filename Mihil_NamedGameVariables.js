@@ -18,11 +18,12 @@
  * ・スクリプトでゲーム内変数を呼んだり書き込んだりすることが多い
  * ・インデックス番号だと何番がどの変数だったかすぐ忘れてしまう
  * 　($gameVariables.value(321)って書いてあるけど一体何の変数？)
+ *   (=>$gameVariables.value("敵倒した数")だとひと目で何の変数かわかる！)
  * 
  * - メリット
  * ・文字で指定できるようになるので、変数の番号を移動させたとしても
  * 　変数名も一緒に移動させればスクリプト側の変数IDを書き換えなくて良くなります
- * ・変数名を文字列で書くことでGrep(置換)がしやすくなります
+ * ・変数名を文字列で書くことでGrep(全文検索)がしやすくなります
  * 　もし変数の名前を変えたくなっても、スクリプト側も一括で変更しやすくなります
  * ・setValueで変な値を代入しようとすると警告してくれるおせっかいな機能付き
  * 　→テストプレイ中のみ、変な型の値を代入するとコンソールにエラーが出ます
@@ -71,8 +72,8 @@
     function isString(str) {
         return (typeof (str) === "string" || str instanceof String);
     }
-    function isNullUn(value){
-        return value == null// typeof value === undefined
+    function isUndefined(value){
+        return typeof value === "undefined";
     }
     
     //-----------------------------------------------------------------------------
@@ -129,8 +130,8 @@
     const _Game_Variables_setValue = Game_Variables.prototype.setValue
     Game_Variables.prototype.setValue = function(variableId, value) {
         if(Utils.isOptionValid('test')){
-            if(isNullUn(value)){
-                console.error(`$gameVariables.setValueでnullかundefinedを代入しようとしています。 value=${value}`)
+            if(isUndefined(value)){
+                console.error(`$gameVariables.setValueでundefinedを代入しようとしています。 value=${value}`)
             }
         }
         if(canCastNumber(variableId)){
@@ -149,8 +150,8 @@
     const _Window_Base_convertEscapeCharacters = Window_Base.prototype.convertEscapeCharacters
     Window_Base.prototype.convertEscapeCharacters = function(text) {
         text = _Window_Base_convertEscapeCharacters.apply(this, arguments)
-        text = text.replace(/\x1bV\[(\w+)\]/gi, (_, p1) =>
-            $gameVariables.value(p1)
+        text = text.replace(/\x1bS\[(\w+)\]/gi, (_, p1) =>
+            $gameSwitches.value(p1)
         );
         text = text.replace(/\x1bV\[(\w+)\]/gi, (_, p1) =>
             $gameVariables.value(p1)
